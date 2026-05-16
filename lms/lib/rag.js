@@ -1,5 +1,7 @@
 const RAG_URL = process.env.RAG_URL ?? "http://localhost:8000";
-const RAG_SECRET = process.env.RAG_INTERNAL_SECRET ?? "add-new-rag-secret-here";
+const RAG_SECRET =
+  process.env.RAG_INTERNAL_SECRET ??
+  "add-new-rag-internal-secret-here-64-chars";
 
 export function toAbsolutePath(relativePath) {
   return `/app/public${relativePath}`;

@@ -1,0 +1,61 @@
+services:
+  # Vector store
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: rag_qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  # Document store
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    container_name: rag_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+
+  # RAG application
+  app:
+    build: .
+    container_name: rag_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      qdrant:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: "6333"
+      ES_URL: http://elasticsearch:9200
+      EMBEDDING_MODEL: BAAI/bge-m3
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-deepseek-r1:8b}
+      RAG_INTERNAL_SECRET: ${RAG_INTERNAL_SECRET:-add-new-rag-internal-secret-here-64-chars}
+      OLLAMA_CTX: "8192"
+    volumes:
+      - ./data:/app/data
+      - ../lms/public/materials:/app/public/materials
+      - ../lms/public/courseMaterials:/app/public/courseMaterials
+    restart: unless-stopped
+
+volumes:
+  qdrant_data:
+  es_data:

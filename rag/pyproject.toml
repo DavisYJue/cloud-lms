@@ -1,0 +1,21 @@
+[project]
+name = "lms-rag"
+version = "0.1.0"
+description = "Cloud LMS"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "elasticsearch<9",
+    "fastapi>=0.115.0",
+    "langchain>=1.2.17",
+    "langchain-community>=0.4.1",
+    "langchain-ollama>=1.1.0",
+    "langchain-text-splitters>=1.1.2",
+    "ollama>=0.6.2",
+    "pypdf>=6.10.2",
+    "python-dotenv>=1.2.2",
+    "qdrant-client>=1.17.1",
+    "requests>=2.33.1",
+    "sentence-transformers>=5.4.1",
+    "uvicorn>=0.30.0",
+]

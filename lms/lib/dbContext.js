@@ -398,7 +398,7 @@ export async function getDBContext(account_id, role) {
       return getTeacherContext(account_id);
     case "assistant":
       return getAssistantContext(account_id);
-    case "administration":
+    case "administrator":
       return getAdminContext(account_id);
     default:
       return {};
@@ -409,7 +409,7 @@ export async function getDBContext(account_id, role) {
 
 export async function getAllowedFilePaths(account_id, role) {
   // No filter for Admin
-  if (role === "administration") return null;
+  if (role === "administrator") return null;
 
   let courseIds = [];
 

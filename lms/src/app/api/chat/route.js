@@ -164,7 +164,7 @@ function summarizeContext(ctx, role) {
   }
 
   // Admin
-  if (role === "administration") {
+  if (role === "administrator") {
     if (ctx.systemSummary) {
       lines.push("\n## System Summary");
       Object.entries(ctx.systemSummary).forEach(([k, v]) =>
@@ -223,7 +223,7 @@ export async function POST(request) {
         role: role,
         file_paths: allowedFilePaths,
       }),
-      signal: AbortSignal.timeout(900_000),
+      signal: AbortSignal.timeout(600000),
     });
 
     if (!ragRes.ok) {
